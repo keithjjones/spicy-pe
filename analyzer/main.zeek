@@ -1,4 +1,4 @@
-module PE;
+module SPICY_PE;
 
 export {
 	option pe_log_section_entropy = F;
@@ -77,7 +77,8 @@ function shannon_entropy(counts: table[count] of count, sectionTotalBytes: count
 	#
 	# where log2() is represented with log10(p_x)/log10(2).
 	for (byte, cnt in counts) {
-		local p_x: double = cnt/count_to_double(sectionTotalBytes);
+		# local p_x: double = cnt/count_to_double(sectionTotalBytes);
+		local p_x: double = cnt/(1.0 * sectionTotalBytes);
 
 		if (p_x > 0.0) {
 			entropy = entropy - (p_x * log10(p_x)/log10(2));
@@ -137,7 +138,7 @@ event pe_section_header(f: fa_file, h: PE::SectionHeader) &priority=1
 	f$pe$section_info_table[h$name]$flags = flag_string;
 }
 
-event pe_import_table(f: fa_file, it: PE::ImportTable) {
+event pe_import_table(f: fa_file, it: SPICY_PE::ImportTable) {
 	if ( ! pe_log_import_table ) {
 		return;
 	}
